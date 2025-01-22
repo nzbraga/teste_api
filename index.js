@@ -2,11 +2,10 @@ const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-<<<<<<< HEAD
-// Rota principal
+
 app.get('/', (req, res) => {
     res.send('Server On, Eu amo minha esposa');
-=======
+
 // Cria um servidor HTTP simples
 const server = http.createServer((req, res) => {
     // Configura o cabeçalho da resposta para indicar JSON
@@ -24,7 +23,7 @@ const server = http.createServer((req, res) => {
         res.statusCode = 404;
         res.end(JSON.stringify({ error: 'Rota não encontrada' }));
     }
->>>>>>> e3bdda02b20f38268d7008ffab9b495312c66975
+
 });
 
 // Rota de status
