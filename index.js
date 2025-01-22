@@ -11,6 +11,7 @@ const server = http.createServer((req, res) => {
 
     // Verifica a rota e responde de acordo
     if (req.method === 'GET' && req.url === '/') {
+        res.send('Server On')
         res.statusCode = 200;
         res.end(JSON.stringify({ message: 'API rodando com sucesso!' }));
     } else if (req.method === 'GET' && req.url === '/status') {
