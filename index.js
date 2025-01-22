@@ -1,18 +1,13 @@
 const express = require('express');
 const app = express();
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 
-// Rota principal
+// Rota simples
 app.get('/', (req, res) => {
-    res.send('Server On, Eu amo minha esposa');
+    res.send('Hello, Cloud Run!');
 });
 
-// Rota de status
-app.get('/status', (req, res) => {
-    res.json({ status: 'ok', uptime: process.uptime() });
-});
-
-// Inicia o servidor na porta definida
+// Inicia o servidor na porta 8080
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 });
