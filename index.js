@@ -4,46 +4,62 @@ const venom = require('venom-bot');
 const app = express();
 app.use(express.json());
 
-let client;
-// reiniciar deply
+let clientReady = false; // Variável para rastrear o status do cliente
 
-// Inicializa o venom-bot
+// Cria o cliente do venom-bot
 venom
   .create({
-    session: 'teste', // Nome da sessão
+    session: 'teste',
+    multidevice: true, // Usar multi-dispositivos
+    headless: false, // Para abrir o navegador e exibir o QR Code
+    useChrome: true,
+    catchQR: (base64Qr, asciiQR, attempts, urlCode) => {
+      console.log('QR Code:', asciiQR); // Exibe o QR no terminal
+      console.log('Abra este link no navegador para escanear o QR:', urlCode);
+    },
   })
   .then((venomClient) => {
     client = venomClient;
-    console.log('Bot iniciado com sucesso!');
+    clientReady = true; // Atualiza o status quando o cliente estiver pronto
+    console.log('Bot inicializado com sucesso!');
   })
   .catch((error) => {
-    console.error('Erro ao iniciar o bot:', error);
+    console.error('Erro ao inicializar o venom-bot:', error);
   });
 
-// Rota principal para testar
-app.get('/', (req, res) => {
-  res.send('API do WhatsApp rodando!');
-});
-
-// Rota para enviar mensagens
-app.post('/send-message', async (req, res) => {
+// Rota para enviar mensagem
+app.post('/send-message', (req, res) => {
   const { number, message } = req.body;
 
-  if (!client) {
-    return res.status(500).send('Bot não está pronto.');
+  if (!clientReady) {
+    return res.status(500).send('Bot não está pronto. Tente novamente em alguns segundos.');
   }
 
-  try {
-    await client.sendText(number, message);
-    res.send('Mensagem enviada com sucesso!');
-  } catch (error) {
-    console.error('Erro ao enviar mensagem:', error);
-    res.status(500).send('Erro ao enviar mensagem.');
+  client
+    .sendText(number, message)
+    .then(() => res.send('Mensagem enviada com sucesso!'))
+    .catch((error) => {
+      console.error('Erro ao enviar mensagem:', error);
+      res.status(500).send('Erro ao enviar mensagem.');
+    });
+});
+
+// Rota para verificar o status do bot
+app.get('/status', (req, res) => {
+  if (clientReady) {
+    res.send('Bot está pronto!');
+  } else {
+    res.status(500).send('Bot ainda não está pronto.');
   }
+});
+
+// Rota para testar a API
+app.get('/', (req, res) => {
+  res.send('API rodando');
 });
 
 // Inicia o servidor
-const PORT = process.env.PORT || 8080;
+const PORT = 8080;
 app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
+  console.log(`API rodando na porta ${PORT}`);
 });
