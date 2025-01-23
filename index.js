@@ -5,6 +5,7 @@ const app = express();
 app.use(express.json());
 
 let client;
+// reiniciar deply
 
 // Inicializa o venom-bot
 venom
