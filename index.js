@@ -22,6 +22,7 @@ venom
     client = venomClient;
     clientReady = true; // Atualiza o status quando o cliente estiver pronto
     console.log('Bot inicializado com sucesso!');
+    browser.close();
   })
   .catch((error) => {
     console.error('Erro ao inicializar o venom-bot:', error);
