@@ -4,6 +4,7 @@ const venom = require('venom-bot');
 const app = express();
 app.use(express.json());
 
+let client; // Variável para armazenar o cliente do venom
 let clientReady = false; // Variável para rastrear o status do cliente
 
 // Cria o cliente do venom-bot
@@ -11,7 +12,7 @@ venom
   .create({
     session: 'teste',
     multidevice: true, // Usar multi-dispositivos
-    headless: false, // Para abrir o navegador e exibir o QR Code
+    headless: false, // Abre o navegador para exibir o QR Code
     useChrome: true,
     catchQR: (base64Qr, asciiQR, attempts, urlCode) => {
       console.log('QR Code:', asciiQR); // Exibe o QR no terminal
@@ -22,7 +23,7 @@ venom
     client = venomClient;
     clientReady = true; // Atualiza o status quando o cliente estiver pronto
     console.log('Bot inicializado com sucesso!');
-    browser.close();
+    // Não feche o navegador aqui, pois ele é necessário para o QR Code
   })
   .catch((error) => {
     console.error('Erro ao inicializar o venom-bot:', error);
